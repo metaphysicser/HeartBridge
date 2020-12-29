@@ -6,6 +6,11 @@ import java.awt.*;
 import javax.swing.plaf.basic.*;
 
 import java.awt.FontMetrics;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class ChatBoard {
@@ -54,7 +59,7 @@ public class ChatBoard {
 
 
 
-    public void addTextMessage(String message,int flag)
+    public void addTextMessage(String message,int flag,String friend)
     {
         Font font = jTextPane.getFont();
 
@@ -113,6 +118,31 @@ public class ChatBoard {
 
         jTextPane.setCaretPosition(jTextPane.getDocument().getLength());
         //this.count += 2;
+
+        if(!friend.equals("null")){
+            File file = null;
+            FileOutputStream o = null;
+
+            byte[] buff = new byte[]{};
+            String path = "D:\\IDEA_code\\HeartBridge_ZhangPL\\src\\Client\\pers\\zpl\\HeartBridge\\history\\"+friend+".txt";
+            try {
+                file = new File(path);
+//            if (!file.exists()) {
+//                file.createNewFile();
+//            }
+                String s = "#"+String.valueOf(flag)+"&"+message;
+                buff=s.getBytes();
+                o=new FileOutputStream(file,true);
+                o.write(buff);
+                o.flush();
+                o.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
 
 
 

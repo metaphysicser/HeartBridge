@@ -2,7 +2,7 @@ package SQL.pers.zpl.HeartBridge;
 
 
 import java.sql.*;
-public class SQL {
+public class account_SQL {
     /**
      * @Description: conduct the sql work
      * @author: zpl
@@ -77,7 +77,7 @@ public class SQL {
     }
 
     public static void main(String[] args){
-        SQL a = new SQL();
+        account_SQL a = new account_SQL();
         System.out.println(a.login_check("zpl1","123456"));
 
     }

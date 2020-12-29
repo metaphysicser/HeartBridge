@@ -27,11 +27,20 @@ public class MainWindow extends JFrame {
     public Controller controller;
     public ChatBoard chatBoard;
     public InputBoard inputBoard;
+    public FriendList friendList;
+
 
     public MainWindow(String user_name, Controller controller){
-        this.init();
+
+
         this.user_name = user_name;
         this.controller = controller;
+        controller.send_user_friend(this.user_name);
+        this.chatBoard = new ChatBoard();
+
+
+        this.inputBoard = new InputBoard();
+        this.init();
 //        try{
 //            this.client = new client_ZhangPL(this.user_name,this);
 //            this.client.init();
@@ -76,10 +85,14 @@ public class MainWindow extends JFrame {
 //        this.getLayeredPane().setLayout(null);
         myPanel.setLayout(null);
 
-        FriendList friendList = new FriendList();
+
+        friendList = new FriendList(controller,chatBoard);
+        friendList.update(controller,chatBoard);
         myPanel.add(friendList.jScrollPane);
 
-        this.chatBoard = new ChatBoard();
+
+
+
         myPanel.add(chatBoard.jScrollPane);
 
 
@@ -95,7 +108,11 @@ public class MainWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String content = inputBoard.textfield.getText();
                 chatBoard.jTextPane.setDocument(chatBoard.jTextPane.getStyledDocument());
-                chatBoard.addTextMessage(content,0);
+                int[] indices = friendList.list1.getSelectedIndices();
+                // 获取选项数据的 ListModel
+                ListModel<String> listModel = friendList.list1.getModel();
+
+                chatBoard.addTextMessage(content,0,"zpl2");
 
                 inputBoard.textfield.setText("");
                 chatBoard.jTextPane.setDocument(chatBoard.jTextPane.getStyledDocument());
@@ -111,10 +128,12 @@ public class MainWindow extends JFrame {
 
 
 
+
+
             }
         });
 
-        this.inputBoard = new InputBoard();
+
         myPanel.add(inputBoard.textfield);
 
 

@@ -1,13 +1,13 @@
 package Server.pers.zpl.HeartBridge;
 
+import SQL.pers.zpl.HeartBridge.account_SQL;
+import SQL.pers.zpl.HeartBridge.friend_SQL;
+
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
-import java.util.Scanner;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -160,6 +160,8 @@ public class server_ZhangPL {
 //                    System.out.println("type:"+type);
                     utils.pers.zpl.HeartBridge.decode_message.decode_message(str,content_,type,sender,receiver);
                     System.out.println("receiver:"+receiver);
+                    System.out.println("sender:"+sender);
+                    System.out.println("content:"+content_);
                 }
 
 //                while (sc.read(buff) > 0) {
@@ -191,7 +193,7 @@ public class server_ZhangPL {
                 user = content_.toString().split(" ")[0];
                 password = content_.toString().split(" ")[1];
 
-                SQL.pers.zpl.HeartBridge.SQL login = new SQL.pers.zpl.HeartBridge.SQL();
+                account_SQL login = new account_SQL();
 
                 account_state = login.login_check(user,password);
                 System.out.println("account :"+String.valueOf(account_state));
@@ -202,13 +204,21 @@ public class server_ZhangPL {
             {
                 System.out.println(1);
 
-                SendToSpecificClient(selector,receiver.toString(),sender.toString(),content_.toString());
+                SendToSpecificClient(selector,receiver.toString(),sender.toString(),content_.toString(),type.toString());
             }
             else if(type.toString().equals("register")&&content_.length()>0)
             {
                 map.put(sender.toString(), sc);// put in the Hashmap
                 maps.add(map);
                 System.out.println(sender+" has registered sucessfully");
+
+            }
+            else if(type.toString().equals("get_friend"))
+            {
+                friend_SQL f = new friend_SQL();
+                String list = f.list_friend(sender.toString());
+                System.out.println("list"+list);
+                SendToSpecificClient(selector,receiver.toString(),sender.toString(),list,type.toString());
 
             }
 
@@ -302,7 +312,7 @@ public class server_ZhangPL {
      * @throws IOException
      */
     public void SendToSpecificClient(Selector selector, String name,String sender,
-                                     String content) throws IOException {
+                                     String content,String type) throws IOException {
 
         SocketChannel desChannel = null;
         for (int i = 0; i < maps.size(); i++) {
@@ -317,7 +327,7 @@ public class server_ZhangPL {
             if (targetchannel instanceof SocketChannel) {
                 if (desChannel == null || desChannel.equals(targetchannel)) {
                     SocketChannel dest = (SocketChannel) targetchannel;
-                    dest.write(charset.encode("people_send&"+sender+"&"+name+"#"+content));
+                    dest.write(charset.encode(type+"&"+sender+"&"+name+"#"+content));
                 }
             }
 

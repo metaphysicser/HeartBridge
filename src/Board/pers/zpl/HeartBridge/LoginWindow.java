@@ -2,7 +2,7 @@ package Board.pers.zpl.HeartBridge;
 
 
 import Client.pers.zpl.HeartBridge.client_ZhangPL;
-import com.mysql.cj.xdevapi.Client;
+import SQL.pers.zpl.HeartBridge.account_SQL;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -119,7 +119,7 @@ public class LoginWindow {
             public void actionPerformed(ActionEvent e) {
 
 
-                SQL.pers.zpl.HeartBridge.SQL login = new SQL.pers.zpl.HeartBridge.SQL();
+                account_SQL login = new account_SQL();
                 //get the input user name
                 String user_name = userText.getText();
                 System.out.println(user_name);

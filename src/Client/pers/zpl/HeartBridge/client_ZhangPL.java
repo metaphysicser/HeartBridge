@@ -34,6 +34,8 @@ public class client_ZhangPL {
     public String user_name;
 
     public Controller controller;
+
+    public String friend_list[];
     //private MainWindow mainWindow;
 
     /**
@@ -227,11 +229,17 @@ public class client_ZhangPL {
         if(type.toString().equals("people_send")&&content_.length()>0)
 
         {
-            this.controller.receive_person_message(content_);
+            this.controller.receive_person_message(content_,receiver.toString());
 
 //            this.mainWindow.chatBoard.jTextPane.setDocument(this.mainWindow.chatBoard.jTextPane.getStyledDocument());
 //            this.mainWindow.chatBoard.addTextMessage(content_.toString(),1);
 
+        }
+        else if(type.toString().equals("get_friend")&&content_.length()>0)
+        {
+
+            this.friend_list = this.controller.get_user_friend(content_.toString());
+            System.out.println(this.friend_list[0]);
         }
 
 
