@@ -1,5 +1,6 @@
 package Board.pers.zpl.HeartBridge;
 
+import Client.pers.zpl.HeartBridge.Controller;
 import Client.pers.zpl.HeartBridge.client_ZhangPL;
 import com.mysql.cj.xdevapi.Client;
 
@@ -20,19 +21,25 @@ import java.io.IOException;
 public class MainWindow extends JFrame {
     JPanel left;
 
-    client_ZhangPL client;
+    //client_ZhangPL client;
 
-    String user_name;
-
-
+    public String user_name;
+    public Controller controller;
     public ChatBoard chatBoard;
-
     public InputBoard inputBoard;
 
-    public MainWindow(String user_name){
+    public MainWindow(String user_name, Controller controller){
         this.init();
         this.user_name = user_name;
-        client = new client_ZhangPL(this.user_name,this);
+        this.controller = controller;
+//        try{
+//            this.client = new client_ZhangPL(this.user_name,this);
+//            this.client.init();
+//        }
+//        catch (IOException e){
+//            e.printStackTrace();
+//        }
+
         //flag = client.check(user_name,user_password);
 //        try{
 //            client.init();
@@ -72,7 +79,7 @@ public class MainWindow extends JFrame {
         FriendList friendList = new FriendList();
         myPanel.add(friendList.jScrollPane);
 
-        chatBoard = new ChatBoard();
+        this.chatBoard = new ChatBoard();
         myPanel.add(chatBoard.jScrollPane);
 
 
@@ -87,11 +94,23 @@ public class MainWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String content = inputBoard.textfield.getText();
+                chatBoard.jTextPane.setDocument(chatBoard.jTextPane.getStyledDocument());
                 chatBoard.addTextMessage(content,0);
 
-
                 inputBoard.textfield.setText("");
-//               chatBoard.jTextPane.setDocument(chatBoard.jTextPane.getStyledDocument());
+                chatBoard.jTextPane.setDocument(chatBoard.jTextPane.getStyledDocument());
+//                try{
+//                    client.write_person_message(content,"zpl2");
+//                }
+//                catch (IOException e1)
+//                {
+//                    e1.printStackTrace();
+//                }
+                controller.send_person_message(content);
+
+
+
+
             }
         });
 
@@ -103,7 +122,7 @@ public class MainWindow extends JFrame {
 
     }
     public static void main(String[] args) {
-        MainWindow a = new MainWindow("zpl1");
+        //MainWindow a = new MainWindow("zpl2",null);
 
     }
 

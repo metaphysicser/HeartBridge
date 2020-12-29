@@ -159,7 +159,7 @@ public class LoginWindow {
                     else if(flag == 1)// access the system
                     {
                         System.out.println("access the system");
-                        MainWindow main = new MainWindow(user_name);
+                        //MainWindow main = new MainWindow(user_name,);
 
                         frame.dispose();
 

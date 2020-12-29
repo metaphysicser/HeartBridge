@@ -23,16 +23,18 @@ import java.nio.charset.Charset;
 
 public class client_ZhangPL {
 
-    private Charset charset = Charset.forName("UTF-8");
+    public Charset charset = Charset.forName("UTF-8");
 
-    private static final int port = 5000; // the port number
+    public static final int port = 5000; // the port number
 
-    private Selector selector = null;
+    public Selector selector = null;
 
-    private SocketChannel sc = null;
+    public SocketChannel sc = null;
 
-    private String user_name;
-    private MainWindow mainWindow;
+    public String user_name;
+
+    public Controller controller;
+    //private MainWindow mainWindow;
 
     /**
      * check account's user name and password
@@ -95,9 +97,10 @@ public class client_ZhangPL {
         return res;
 
     }
-    public client_ZhangPL(String user_name, MainWindow mainWindow){
+    public client_ZhangPL(String user_name,Controller controller){
         this.user_name = user_name;
-        this.mainWindow = mainWindow;
+        this.controller = controller;
+        //this.mainWindow = mainWindow;
 
     }
 
@@ -159,9 +162,11 @@ public class client_ZhangPL {
      * @param
      * @throws IOException
      */
-    private void write_person_message(String content,String receiver) throws IOException {
+    public void write_person_message(String content,String receiver) throws IOException {
         String message = "people_send&"+this.user_name+"&"+receiver+"#"+content;
         this.sc.write(charset.encode(message));
+        //controller.receive_person_message(content,receiver);
+
     }
 
 
@@ -220,24 +225,26 @@ public class client_ZhangPL {
         utils.pers.zpl.HeartBridge.decode_message.decode_message(content,content_,type,sender,receiver);
 
         if(type.toString().equals("people_send")&&content_.length()>0)
+
         {
-            mainWindow.chatBoard.addTextMessage(content_.toString(),1);
+            this.controller.receive_person_message(content_);
+
+//            this.mainWindow.chatBoard.jTextPane.setDocument(this.mainWindow.chatBoard.jTextPane.getStyledDocument());
+//            this.mainWindow.chatBoard.addTextMessage(content_.toString(),1);
+
         }
 
 
-        mainWindow.chatBoard.addTextMessage(content,1);
+
 
     }
 
     public static void main(String[] args) throws IOException {
-        client_ZhangPL a = new client_ZhangPL("zpl1",null);
-        a.init();
+        //client_ZhangPL a = new client_ZhangPL("zpl1");
+        //a.init();
 
 
-        client_ZhangPL b = new client_ZhangPL("zpl2",null);
-        b.init();
-        
-        b.write_person_message("hello","zpl1");
+
 
     }
 }
