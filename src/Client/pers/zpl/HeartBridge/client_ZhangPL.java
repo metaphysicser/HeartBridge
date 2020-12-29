@@ -1,5 +1,8 @@
 package Client.pers.zpl.HeartBridge;
 
+import Board.pers.zpl.HeartBridge.MainWindow;
+import com.sun.tools.javac.Main;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -29,6 +32,7 @@ public class client_ZhangPL {
     private SocketChannel sc = null;
 
     private String user_name;
+    private MainWindow mainWindow;
 
     /**
      * check account's user name and password
@@ -91,8 +95,9 @@ public class client_ZhangPL {
         return res;
 
     }
-    public client_ZhangPL(String user_name){
+    public client_ZhangPL(String user_name, MainWindow mainWindow){
         this.user_name = user_name;
+        this.mainWindow = mainWindow;
 
     }
 
@@ -200,17 +205,36 @@ public class client_ZhangPL {
                     content += charset.decode(buff);
                 }
                 System.out.println(content);
+                dealWithMessage(content);
                 sk.interestOps(SelectionKey.OP_READ);
             }
         }
     }
 
+    public void dealWithMessage(String content){
+        StringBuilder content_ = new StringBuilder();
+
+        StringBuilder type= new StringBuilder();
+        StringBuilder sender = new StringBuilder();
+        StringBuilder receiver = new StringBuilder();
+        utils.pers.zpl.HeartBridge.decode_message.decode_message(content,content_,type,sender,receiver);
+
+        if(type.toString().equals("people_send")&&content_.length()>0)
+        {
+            mainWindow.chatBoard.addTextMessage(content_.toString(),1);
+        }
+
+
+        mainWindow.chatBoard.addTextMessage(content,1);
+
+    }
+
     public static void main(String[] args) throws IOException {
-        client_ZhangPL a = new client_ZhangPL("zpl1");
+        client_ZhangPL a = new client_ZhangPL("zpl1",null);
         a.init();
 
 
-        client_ZhangPL b = new client_ZhangPL("zpl2");
+        client_ZhangPL b = new client_ZhangPL("zpl2",null);
         b.init();
         
         b.write_person_message("hello","zpl1");

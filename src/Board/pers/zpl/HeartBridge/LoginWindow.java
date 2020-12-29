@@ -126,7 +126,7 @@ public class LoginWindow {
                 // get the input password
                 String user_password = passwordText.getText();
                 System.out.println(user_password);
-                client_ZhangPL client = new client_ZhangPL(user_name);
+                client_ZhangPL client = new client_ZhangPL(user_name,null);
 
                 if(user_name.equals(""))
                 {

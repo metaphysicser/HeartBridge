@@ -1,7 +1,9 @@
 package Board.pers.zpl.HeartBridge;
 
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
+import javax.swing.plaf.basic.*;
 
 import java.awt.FontMetrics;
 import java.util.ArrayList;
@@ -15,10 +17,13 @@ public class ChatBoard {
         jTextPane.setBounds(100,200,500,200);
         jTextPane.setOpaque(false);
         Font font = new Font("宋体",Font.BOLD,15);//set the txt
+        jTextPane.setEditable(false);
         jTextPane.setFont(font);
-
-        this.addTextMessage("Hello",1);
-        this.addTextMessage("Hellosagfdddddddddddddddddddddddddddddddddddddddddddddddddddddd",0);
+        Caret caret = jTextPane.getCaret();
+        System.out.println(caret.toString());
+//
+//        this.addTextMessage("Hello",1);
+//        this.addTextMessage("Hellosagfdddddddddddddddddddddddddddddddddddddddddddddddddddddd",0);
 
 
 
@@ -30,6 +35,8 @@ public class ChatBoard {
 
 
     }
+
+
 
     public void addTextMessage(String message,int flag)
     {
@@ -61,6 +68,30 @@ public class ChatBoard {
         JBubble jBubble = new JBubble(str,height,flag,width);
         jBubble.setPreferredSize(new Dimension(width,height * (str.size()+1)+30));
         jTextPane.insertComponent(jBubble);
+        //jTextPane.setText(jTextPane.getText()+"\n");
+//        Caret caret = jTextPane.getCaret();
+//        DefaultCaret defaultCaret = new DefaultCaret();
+//        defaultCaret.setDot(0, Position.Bias.Forward);
+//
+//
+//        jTextPane.setCaretPosition(defaultCaret.getMark());
+
+
+//        StyledDocument doc = jTextPane.getStyledDocument();
+//        doc.insertString(doc.getLength(), attrib.getText() + "\n",
+//                attrib.getAttrSet());
+        SimpleAttributeSet set = new SimpleAttributeSet();
+        Document doc = jTextPane.getStyledDocument();
+        FontMetrics fm = jTextPane.getFontMetrics(jTextPane.getFont());//得到JTextPane 的当前字体尺寸
+        int paneWidth = jTextPane.getWidth();//面板的宽度
+        try{
+            doc.insertString(doc.getLength(),"\n",set);
+        }
+        catch (Exception e){
+
+        }
+
+
 
 
     }

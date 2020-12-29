@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
 
@@ -23,10 +25,14 @@ public class MainWindow extends JFrame {
     String user_name;
 
 
+    public ChatBoard chatBoard;
+
+    public InputBoard inputBoard;
+
     public MainWindow(String user_name){
         this.init();
         this.user_name = user_name;
-        client = new client_ZhangPL(this.user_name);
+        client = new client_ZhangPL(this.user_name,this);
         //flag = client.check(user_name,user_password);
 //        try{
 //            client.init();
@@ -66,8 +72,31 @@ public class MainWindow extends JFrame {
         FriendList friendList = new FriendList();
         myPanel.add(friendList.jScrollPane);
 
-        ChatBoard chatBoard = new ChatBoard();
+        chatBoard = new ChatBoard();
         myPanel.add(chatBoard.jScrollPane);
+
+
+
+        JButton jButton = new JButton();
+        jButton.setText("发送");
+        jButton.setBorder(BorderFactory.createRaisedSoftBevelBorder());
+        jButton.setBackground(Color.WHITE);
+        jButton.setBounds(730,460,60,20);
+        myPanel.add(jButton);
+        jButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String content = inputBoard.textfield.getText();
+                chatBoard.addTextMessage(content,0);
+
+
+                inputBoard.textfield.setText("");
+//               chatBoard.jTextPane.setDocument(chatBoard.jTextPane.getStyledDocument());
+            }
+        });
+
+        this.inputBoard = new InputBoard();
+        myPanel.add(inputBoard.textfield);
 
 
 
