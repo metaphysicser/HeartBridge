@@ -36,6 +36,8 @@ public class client_ZhangPL {
     public Controller controller;
 
     public String friend_list[];
+
+    public String friend_online[];
     //private MainWindow mainWindow;
 
     /**
@@ -58,18 +60,6 @@ public class client_ZhangPL {
             // sc既能写也能读，这边是写
         sc.write(charset.encode("check&null&null#"+content));
 
-
-//        ByteBuffer intBuff = ByteBuffer.allocate(1024);
-//
-//        sc.read(intBuff);// the head info read from client,include the name length.
-//
-//        intBuff.flip();
-//
-//        String str = charset.decode(intBuff).toString();
-//        System.out.println(str);
-//        int res  = Integer.parseInt(str);
-//
-//        System.out.println(res);
         int readyChannels = selector.select();
         String content_ = "";
 
@@ -102,7 +92,7 @@ public class client_ZhangPL {
     public client_ZhangPL(String user_name,Controller controller){
         this.user_name = user_name;
         this.controller = controller;
-        //this.mainWindow = mainWindow;
+
 
     }
 
@@ -125,38 +115,9 @@ public class client_ZhangPL {
 
         sc.write(charset.encode(register_message));
 
-
-
         new Thread(new ClientThread()).start();
+        System.out.println("the client begin to listen to service");
 
-//        Scanner scan = new Scanner(System.in);
-//
-//        while (scan.hasNextLine()) {
-//            String line = scan.nextLine();
-//            if ("".equals(line)) {
-//                continue;
-//            }
-//            int capacity = charset.encode(line).capacity();
-//            String strCapacity = capacity + "";
-//            // result是strCapacity经过格式（-）处理之后的结果，方便服务端解析
-//            String result = null;
-//            if (strCapacity.length() == 1) {
-//                result = "---" + strCapacity;
-//            } else if (strCapacity.length() == 2) {
-//                result = "--" + strCapacity;
-//            } else if (strCapacity.length() == 3) {
-//                result = "-" + strCapacity;
-//            } else if (strCapacity.length() == 4) {
-//                result = strCapacity;
-//            }
-//
-//            // sc既能写也能读，这边是写
-//            sc.write(charset.encode(result));
-//           sc.write(charset.encode(line));
-////
-//
-//
-//        }
 
     }
     /**
@@ -167,7 +128,7 @@ public class client_ZhangPL {
     public void write_person_message(String content,String receiver) throws IOException {
         String message = "people_send&"+this.user_name+"&"+receiver+"#"+content;
         this.sc.write(charset.encode(message));
-        //controller.receive_person_message(content,receiver);
+        System.out.println("the message "+message+" has sended sucessfully");
 
     }
 
@@ -211,7 +172,7 @@ public class client_ZhangPL {
                     buff.flip();
                     content += charset.decode(buff);
                 }
-                System.out.println(content);
+                System.out.println("client has received the message "+content+" sucessfully");
                 dealWithMessage(content);
                 sk.interestOps(SelectionKey.OP_READ);
             }
@@ -229,17 +190,20 @@ public class client_ZhangPL {
         if(type.toString().equals("people_send")&&content_.length()>0)
 
         {
-            this.controller.receive_person_message(content_,receiver.toString());
-
-//            this.mainWindow.chatBoard.jTextPane.setDocument(this.mainWindow.chatBoard.jTextPane.getStyledDocument());
-//            this.mainWindow.chatBoard.addTextMessage(content_.toString(),1);
-
+            this.controller.receive_person_message(content_,sender.toString());
         }
         else if(type.toString().equals("get_friend")&&content_.length()>0)
         {
 
-            this.friend_list = this.controller.get_user_friend(content_.toString());
-            System.out.println(this.friend_list[0]);
+            if(sender.toString().equals(user_name))
+            {
+                this.friend_list = this.controller.get_user_friend(content_.toString());
+                this.friend_online = this.controller.get_friend_online(content_.toString());
+            }
+
+
+
+
         }
 
 

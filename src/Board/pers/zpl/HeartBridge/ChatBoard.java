@@ -17,13 +17,16 @@ public class ChatBoard {
     JScrollPane jScrollPane;
     public JTextPane jTextPane;
     private int count = 1;
-    public ChatBoard(){
+    public String current_clicked;
+    public String user;
+    public ChatBoard(String user){
+        this.user = user;
 
         jTextPane = new JTextPane();
         jTextPane.setBounds(100,200,500,200);
         jTextPane.setOpaque(false);
         Font font = new Font("宋体",Font.BOLD,15);//set the txt
-        //jTextPane.setEditable(false);
+        jTextPane.setEditable(false);
         jTextPane.setFont(font);
 
 //
@@ -44,8 +47,8 @@ public class ChatBoard {
     {
         SimpleAttributeSet set = new SimpleAttributeSet();
         Document doc = jTextPane.getStyledDocument();
-        FontMetrics fm = jTextPane.getFontMetrics(jTextPane.getFont());//得到JTextPane 的当前字体尺寸
-        int paneWidth = jTextPane.getWidth();//面板的宽度
+//        FontMetrics fm = jTextPane.getFontMetrics(jTextPane.getFont());//得到JTextPane 的当前字体尺寸
+//        int paneWidth = jTextPane.getWidth();//面板的宽度
         try{
 
             doc.insertString(doc.getLength(),"\n",null);
@@ -92,44 +95,24 @@ public class ChatBoard {
         //jTextPane.setCaretPosition(0);
         Caret caret = jTextPane.getCaret();
 
-        System.out.println(caret);
-//        DefaultCaret defaultCaret = new DefaultCaret();
-//        defaultCaret.setDot(0, Position.Bias.Forward);
-//
-//
-//        jTextPane.setCaretPosition(defaultCaret.getMark());
+//        System.out.println(caret);
 
-
-//        StyledDocument doc = jTextPane.getStyledDocument();
-//        doc.insertString(doc.getLength(), attrib.getText() + "\n",
-//                attrib.getAttrSet());
-//        SimpleAttributeSet set = new SimpleAttributeSet();
-//        Document doc = jTextPane.getStyledDocument();
-//        FontMetrics fm = jTextPane.getFontMetrics(jTextPane.getFont());//得到JTextPane 的当前字体尺寸
-//        int paneWidth = jTextPane.getWidth();//面板的宽度
-//        try{
-//            doc.insertString(doc.getLength(),"\n",set);
-//        }
-//        catch (Exception e){
-//            e.printStackTrace();
-//
-//        }
         newLine();
 
         jTextPane.setCaretPosition(jTextPane.getDocument().getLength());
-        //this.count += 2;
 
-        if(!friend.equals("null")){
+    }
+    public void write_history(String message,int flag,String friend)
+    {
+        if(!friend.equals("null")&& friend != null){
             File file = null;
             FileOutputStream o = null;
 
             byte[] buff = new byte[]{};
-            String path = "D:\\IDEA_code\\HeartBridge_ZhangPL\\src\\Client\\pers\\zpl\\HeartBridge\\history\\"+friend+".txt";
+            String path = "D:\\IDEA_code\\HeartBridge_ZhangPL\\src\\Client\\pers\\zpl\\HeartBridge\\history\\"+user+"\\"+friend+".txt";
             try {
                 file = new File(path);
-//            if (!file.exists()) {
-//                file.createNewFile();
-//            }
+
                 String s = "#"+String.valueOf(flag)+"&"+message;
                 buff=s.getBytes();
                 o=new FileOutputStream(file,true);
@@ -141,14 +124,5 @@ public class ChatBoard {
                 e.printStackTrace();
             }
         }
-
-
-
-
-
-
-
-
-
     }
 }

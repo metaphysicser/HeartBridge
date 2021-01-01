@@ -137,45 +137,18 @@ public class server_ZhangPL {
                 String str = charset.decode(intBuff).toString();
                 System.out.println("str: "+str);
 
-//                if (str.substring(0, 3).equals("---")) {
-//                    capacity = Integer.parseInt(str.substring(3, 4));
-//                } else if (str.substring(0, 2).equals("--")) {
-//                    capacity = Integer.parseInt(str.substring(2, 4));
-//                } else if (str.substring(0, 1).equals("-")) {
-//                    capacity = Integer.parseInt(str.substring(1, 4));
-//                } else if (!str.substring(0, 1).equals("-")) {
-//                    capacity = Integer.parseInt(str.substring(0, 4));
-//                }// set capacity due to the length of name
+//
                 if(str.length()>0)
                 {
-//                    String header= str.split("#")[0];
-//                    content_ = str.split("#")[1];
-//                    System.out.println("content_:"+content_);
 //
-//
-//                    type = header.split("&")[0];
-//                    sender = header.split("&")[1];
-//                    receiver = header.split("&")[2];
-
-//                    System.out.println("type:"+type);
                     utils.pers.zpl.HeartBridge.decode_message.decode_message(str,content_,type,sender,receiver);
                     System.out.println("receiver:"+receiver);
                     System.out.println("sender:"+sender);
                     System.out.println("content:"+content_);
+                    System.out.println("type:"+type);
                 }
 
-//                while (sc.read(buff) > 0) {
 //
-//                    buff.flip();
-//
-//                    content.append(charset.decode(buff));
-//
-//                }
-//                System.out.println("Server is listening from client "
-//                        + sc.socket().getRemoteSocketAddress()
-//                        + " data rev is: " + content);
-//
-//                sk.interestOps(SelectionKey.OP_READ);
 
             } catch (IOException io) {
                 sk.cancel();
@@ -184,7 +157,7 @@ public class server_ZhangPL {
                 }
             }
 
-            System.out.println("type:"+type);
+
             if(type.toString().equals("check")&&content_.length()>0)
             {
                 String user = null;
@@ -202,9 +175,33 @@ public class server_ZhangPL {
             }
             else if(type.toString().equals("people_send")&&content_.length()>0)
             {
-                System.out.println(1);
+                System.out.println("the type is people_send");
 
-                SendToSpecificClient(selector,receiver.toString(),sender.toString(),content_.toString(),type.toString());
+                if(cheackOut(receiver.toString())){
+                    if(sender.toString().equals(receiver.toString()))//send self
+                        SendToSpecificClient(selector,sender.toString(),sender.toString(),
+                                "你不能向自己发消息",type.toString());
+                    else{
+                        SendToSpecificClient(selector,receiver.toString(),sender.toString(),content_.toString(),type.toString());
+                    }
+
+                }
+                else//not oneline or don't exist
+                {
+                    account_SQL a = new account_SQL();
+                    if(a.user_check(receiver.toString())==1)
+                    {
+                        SendToSpecificClient(selector,sender.toString(),sender.toString(),
+                                "对方没有上线或不存在",type.toString());
+                    }
+                    else{
+                        SendToSpecificClient(selector,sender.toString(),sender.toString(),
+                                "对方没有上线或不存在",type.toString());
+                    }
+                }
+
+
+
             }
             else if(type.toString().equals("register")&&content_.length()>0)
             {
@@ -217,10 +214,35 @@ public class server_ZhangPL {
             {
                 friend_SQL f = new friend_SQL();
                 String list = f.list_friend(sender.toString());
-                System.out.println("list"+list);
-                SendToSpecificClient(selector,receiver.toString(),sender.toString(),list,type.toString());
+                System.out.println("friend list is "+list);
+                String list1[] = list.split(" ");
+                String online = "@";
 
-            }
+
+
+                for(int i = 0;i<list1.length;i++)
+                {
+                    if(i!=0)
+                        online+=" ";
+                    int m = 0;
+                    for (int j = 0; j < maps.size(); j++) {
+                        if (maps.get(j).get(list1[i]) != null) {
+                            online +="1";
+                            m = 1;
+                            break;
+                        }
+
+                        }
+                    if(m==0)
+                        online+="0";
+                    }
+
+                SendToSpecificClient(selector,receiver.toString(),sender.toString(),list+online,type.toString());
+                    }
+
+
+
+
 
 
 //
@@ -328,6 +350,7 @@ public class server_ZhangPL {
                 if (desChannel == null || desChannel.equals(targetchannel)) {
                     SocketChannel dest = (SocketChannel) targetchannel;
                     dest.write(charset.encode(type+"&"+sender+"&"+name+"#"+content));
+                    System.out.println("the message has sended successfully");
                 }
             }
 
@@ -367,6 +390,28 @@ public class server_ZhangPL {
      */
     public void sendToOthersClient(Selector selector, SocketChannel oneself,
                                    String content) throws IOException {
+
+        for (SelectionKey key : selector.keys()) {
+            Channel targetchannel = key.channel();
+            if (targetchannel instanceof SocketChannel
+                    && targetchannel != oneself) {
+                SocketChannel dest = (SocketChannel) targetchannel;
+                dest.write(charset.encode(content));
+            }
+
+        }
+
+    }
+
+    /**
+     * Broadcast To All Clients
+     *
+     * @param selector
+     * @param content
+     * @throws IOException
+     */
+    public void update_friend_list(Selector selector, SocketChannel oneself,String content)
+            throws IOException {
 
         for (SelectionKey key : selector.keys()) {
             Channel targetchannel = key.channel();

@@ -1,6 +1,7 @@
 package Board.pers.zpl.HeartBridge;
 
 
+import Client.pers.zpl.HeartBridge.Controller;
 import Client.pers.zpl.HeartBridge.client_ZhangPL;
 import SQL.pers.zpl.HeartBridge.account_SQL;
 
@@ -160,6 +161,7 @@ public class LoginWindow {
                     {
                         System.out.println("access the system");
                         //MainWindow main = new MainWindow(user_name,);
+                        Controller controller = new Controller(user_name);
 
                         frame.dispose();
 

@@ -11,7 +11,7 @@ public class decode_history {
     public static void decode_history(String content, Controller controller,String receiver){
         String setence[] = content.split("#");
         try{
-            for(int i = 0;setence[i]!=null;i++){
+            for(int i = 0;i<setence.length;i++){
                 String object = setence[i].split("&")[0];
                 String word = setence[i].split("&")[1];
                 if(object.equals("1")){

@@ -76,6 +76,52 @@ public class account_SQL {
         return -2;
     }
 
+    public int user_check(String user_name) {
+        /**
+         * check the user name and password
+         * @param user_name the user input
+         * @retuen: 1 right
+         * @return: 0 account don't exist
+         */
+        Connection connection = null;
+        Statement statement = null;
+        try {
+            Class.forName(JDBC_DRIVER);
+
+            System.out.println("connect the database...");
+            connection = DriverManager.getConnection(DB_URL,USER,PASSWORD);
+
+            statement = connection.createStatement();
+            String sql;
+            sql = "SELECT name from account";
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()){
+                String name = resultSet.getString("name");
+
+
+                if (name.equals(user_name)) {
+                    System.out.println("the user "+user_name+" exists");
+                    resultSet.close();
+                    statement.close();
+                    connection.close();
+                    return 1;
+
+
+                }
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            System.out.println("the user "+user_name+" doesn't exits");
+            return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("the database maybe shut down");
+        return -2;
+    }
+
     public static void main(String[] args){
         account_SQL a = new account_SQL();
         System.out.println(a.login_check("zpl1","123456"));

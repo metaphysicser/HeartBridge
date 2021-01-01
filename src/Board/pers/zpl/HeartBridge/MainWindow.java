@@ -11,6 +11,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.nio.channels.SelectionKey;
+import java.util.Iterator;
+import java.util.Set;
 
 
 /**
@@ -19,7 +22,7 @@ import java.io.IOException;
  * @Date: 2020.12.27
  * */
 public class MainWindow extends JFrame {
-    JPanel left;
+    public JPanel mypanel;
 
     //client_ZhangPL client;
 
@@ -30,46 +33,44 @@ public class MainWindow extends JFrame {
     public FriendList friendList;
 
 
+
     public MainWindow(String user_name, Controller controller){
 
 
         this.user_name = user_name;
         this.controller = controller;
         controller.send_user_friend(this.user_name);
-        this.chatBoard = new ChatBoard();
+        this.chatBoard = new ChatBoard(this.user_name);
 
 
-        this.inputBoard = new InputBoard();
+
+
         this.init();
-//        try{
-//            this.client = new client_ZhangPL(this.user_name,this);
-//            this.client.init();
-//        }
-//        catch (IOException e){
-//            e.printStackTrace();
-//        }
+        new Thread(new mainThread()).start();
+//        this.setLocation(350,150);// appear lacation
+//        this.setLocationRelativeTo(null);
 
-        //flag = client.check(user_name,user_password);
-//        try{
-//            client.init();
-//        }
-//        catch (IOException e1)
-//        {
-//            e1.printStackTrace();
-//
-//        }
-
-
-
-
-        this.setSize(900,600);//set seze
-        this.setVisible(true);//make visible
-        this.setLocation(350,150);// appear lacation
-        this.setLocationRelativeTo(null);
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        Dimension dimension = tk.getScreenSize();//获取屏幕大小
+        int width=dimension.width;
+        int height=dimension.height;
+        int x=(width-422)/2;
+        int y=(height-529)/2;
+        this.setLocation(x, y);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 //        left = new FriendList();
 //        this.add(left);
-        this.setVisible(true);
+
+        this.setSize(900,600);//set seze
+        try{
+            this.setVisible(true);//make visible
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
+        System.out.println("the MainWindow has initilizated sucessfully");
     }
     public void init(){
         ImageIcon icon = new ImageIcon(".\\src\\Board\\pers\\zpl\\HeartBridge\\background\\MainBackground.jpg");
@@ -80,15 +81,15 @@ public class MainWindow extends JFrame {
 
         this.getLayeredPane().add(imageLabel,new Integer(Integer.MIN_VALUE));
         JPanel myPanel = (JPanel)this.getContentPane();		//set as my content panel
+        this.mypanel = myPanel;
         myPanel.setOpaque(false);
 //        myPanel.setLayout(new FlowLayout());
 //        this.getLayeredPane().setLayout(null);
         myPanel.setLayout(null);
 
 
-        friendList = new FriendList(controller,chatBoard);
-        friendList.update(controller,chatBoard);
-        myPanel.add(friendList.jScrollPane);
+
+
 
 
 
@@ -102,17 +103,33 @@ public class MainWindow extends JFrame {
         jButton.setBorder(BorderFactory.createRaisedSoftBevelBorder());
         jButton.setBackground(Color.WHITE);
         jButton.setBounds(730,460,60,20);
+        jButton.setEnabled(false);
         myPanel.add(jButton);
+        this.inputBoard = new InputBoard(chatBoard,jButton);
+        friendList = new FriendList(controller,chatBoard,jButton,inputBoard);
+        friendList.update(controller,chatBoard);
+
+
+
+        myPanel.add(friendList.jScrollPane);
+
         jButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String content = inputBoard.textfield.getText();
                 chatBoard.jTextPane.setDocument(chatBoard.jTextPane.getStyledDocument());
-                int[] indices = friendList.list1.getSelectedIndices();
-                // 获取选项数据的 ListModel
-                ListModel<String> listModel = friendList.list1.getModel();
+//                int[] indices = friendList.list1.getSelectedIndices();
+//                // 获取选项数据的 ListModel
+//                ListModel<String> listModel = friendList.list1.getModel();
 
-                chatBoard.addTextMessage(content,0,"zpl2");
+
+
+                System.out.println("current click: "+chatBoard.current_clicked);
+                if(chatBoard.current_clicked != null)
+                {
+                    chatBoard.addTextMessage(content,0, chatBoard.current_clicked);
+                    chatBoard.write_history(content,0, chatBoard.current_clicked);
+                }
 
                 inputBoard.textfield.setText("");
                 chatBoard.jTextPane.setDocument(chatBoard.jTextPane.getStyledDocument());
@@ -140,9 +157,35 @@ public class MainWindow extends JFrame {
 
 
     }
-    public static void main(String[] args) {
-        //MainWindow a = new MainWindow("zpl2",null);
+    private class mainThread implements Runnable {
+        public void run() {
+            {
+                int n = 0;
+                while (true) {
+                    if (n%5==0) {
+                        System.out.println("username"+user_name);
+                        controller.send_user_friend(user_name);
+                        //friendList.update(controller, chatBoard);
+                        friendList.real_update(controller);
+//                        mypanel.validate();
+//                        mypanel.repaint();
+//                        mypanel.updateUI();
+                        setVisible(true);
 
-    }
+                    }
+                    n++;
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
-}
+
+            //public static void main(String[] args) {
+            //MainWindow a = new MainWindow("zpl2",null);
+
+        }
+
+    }}

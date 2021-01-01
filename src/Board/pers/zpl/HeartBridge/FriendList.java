@@ -19,14 +19,18 @@ public class FriendList {
     public String friend[]={"小明","小红","幸福一家人","乐乐","项目开发组","考研1群","小杰","辅导员","测试人员1","美工人员","编程人员","甲方"};
     public JList<String> list1; //= new JList<String>(friend);
     JScrollPane jScrollPane;
+    JButton jButton;
+    InputBoard inputBoard;
 
-    public FriendList(Controller controller,ChatBoard chatBoard){
+    public FriendList(Controller controller,ChatBoard chatBoard,JButton jButton,InputBoard inputBoard){
         // transparent the console
 //        this.setLayout(null);
 //        this.setOpaque(false);
 
         //this.friend = controller.client.friend_list;
         list1 = new JList<String>(friend);
+        this.jButton = jButton;
+        this.inputBoard = inputBoard;
 
         //update(controller);
 
@@ -36,9 +40,13 @@ public class FriendList {
 
     }
     public void update(Controller controller,ChatBoard chatBoard){
-        System.out.println(controller.mainWindow);
+        System.out.println(friend[0]);
+
         this.friend = controller.client.friend_list;
+
         list1 = new JList<String>(friend);
+//        list1.removeAll();
+//        list1.updateUI();
         Font font = new Font("微软雅黑",Font.PLAIN,30);//set the txt
         list1.setFont(font);
 
@@ -62,10 +70,14 @@ public class FriendList {
                 // 输出选中的选项
                 for (int index : indices) {
                     System.out.println("选中: " + index + " = " + listModel.getElementAt(index));
+                    chatBoard.current_clicked = listModel.getElementAt(index);
                 }
+                if(inputBoard.textfield.getText()!="")
+                    jButton.setEnabled(true);
+
                 if(true){
                     chatBoard.jTextPane.setText("");
-                    String path = "D:\\IDEA_code\\HeartBridge_ZhangPL\\src\\Client\\pers\\zpl\\HeartBridge\\history\\"+listModel.getElementAt(indices[0])+".txt";
+                    String path = "D:\\IDEA_code\\HeartBridge_ZhangPL\\src\\Client\\pers\\zpl\\HeartBridge\\history\\"+chatBoard.user+"\\"+chatBoard.current_clicked+".txt";
                     File file = new File(path);
                     BufferedReader bufferedReader = null;
                     try{
@@ -74,10 +86,10 @@ public class FriendList {
 
                         String linetxt = null;
                         while ((linetxt = bufferedReader.readLine()) != null) {
-                            System.out.println(linetxt);
+//                            System.out.println(linetxt);
                             result.append(linetxt);
                         }
-                        utils.pers.zpl.HeartBridge.decode_history.decode_history(result.toString(),controller,listModel.getElementAt(indices[0]));
+                        utils.pers.zpl.HeartBridge.decode_history.decode_history(result.toString(),controller,controller.chatBoard.current_clicked);
 
 
                     }catch (Exception e2)
@@ -98,17 +110,6 @@ public class FriendList {
             }
         });
 
-//        list1.setCellRenderer(new DefaultListCellRenderer() {
-//            @Override
-//            public Component getListCellRendererComponent(JList jlist, Object o, int i, boolean bln, boolean bln1) {
-//                Component listCellRendererComponent = super.getListCellRendererComponent(jlist, o, i, bln, bln1);
-//                JLabel label=(JLabel) listCellRendererComponent;
-//                label.setOpaque(false);
-//                return label;
-//            }
-//        });
-        //default selected
-
 
         jScrollPane = new JScrollPane(list1);
 
@@ -119,6 +120,15 @@ public class FriendList {
         jScrollPane.getViewport().setOpaque(false);
 
         //add scrollPane
+
+    }
+
+    public void real_update(Controller controller){
+        this.friend = controller.client.friend_list;
+
+        list1.setListData(friend);
+
+        jScrollPane.setViewportView(list1);
 
     }
 }
