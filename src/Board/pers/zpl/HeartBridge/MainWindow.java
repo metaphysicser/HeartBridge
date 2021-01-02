@@ -10,6 +10,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.util.Iterator;
@@ -89,7 +91,39 @@ public class MainWindow extends JFrame {
 
 
 
+        JButton jButton1 = new JButton();
+        jButton1.setText("删除聊天记录");
+        jButton1.setBorder(BorderFactory.createRaisedSoftBevelBorder());
+        jButton1.setBackground(Color.WHITE);
+        jButton1.setBounds(600,460,100,20);
+        jButton1.setEnabled(false);
+        myPanel.add(jButton1);
+        jButton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                chatBoard.jTextPane.setText("");
+                String name;
+                if(chatBoard.current_clicked.contains("（未在线）"))
+                    name = chatBoard.current_clicked.split("（")[0];
+                else
+                    name = chatBoard.current_clicked;
+                String fileName = "D:\\IDEA_code\\HeartBridge_ZhangPL\\src\\Client\\pers\\zpl\\HeartBridge\\history\\"+user_name+"\\"+name+".txt";
+                File file =new File(fileName);
+                try {
+                    if(!file.exists()) {
+                        file.createNewFile();
+                    }
+                    FileWriter fileWriter =new FileWriter(file);
+                    fileWriter.write("");
+                    fileWriter.flush();
+                    fileWriter.close();
+                } catch (IOException e2) {
+                    e2.printStackTrace();
+                }
 
+
+            }
+        });
 
 
 
@@ -106,7 +140,7 @@ public class MainWindow extends JFrame {
         jButton.setEnabled(false);
         myPanel.add(jButton);
         this.inputBoard = new InputBoard(chatBoard,jButton);
-        friendList = new FriendList(controller,chatBoard,jButton,inputBoard);
+        friendList = new FriendList(controller,chatBoard,jButton,inputBoard,jButton1);
         friendList.update(controller,chatBoard);
 
 

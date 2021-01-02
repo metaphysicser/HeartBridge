@@ -21,8 +21,9 @@ public class FriendList {
     JScrollPane jScrollPane;
     JButton jButton;
     InputBoard inputBoard;
+    JButton jButton1;
 
-    public FriendList(Controller controller,ChatBoard chatBoard,JButton jButton,InputBoard inputBoard){
+    public FriendList(Controller controller,ChatBoard chatBoard,JButton jButton,InputBoard inputBoard,JButton jButton1){
         // transparent the console
 //        this.setLayout(null);
 //        this.setOpaque(false);
@@ -31,6 +32,7 @@ public class FriendList {
         list1 = new JList<String>(friend);
         this.jButton = jButton;
         this.inputBoard = inputBoard;
+        this.jButton1 = jButton1;
 
         //update(controller);
 
@@ -74,10 +76,18 @@ public class FriendList {
                 }
                 if(inputBoard.textfield.getText()!="")
                     jButton.setEnabled(true);
+                jButton1.setEnabled(true);
+
 
                 if(true){
                     chatBoard.jTextPane.setText("");
-                    String path = "D:\\IDEA_code\\HeartBridge_ZhangPL\\src\\Client\\pers\\zpl\\HeartBridge\\history\\"+chatBoard.user+"\\"+chatBoard.current_clicked+".txt";
+                    String name;
+                    if(chatBoard.current_clicked.contains("（未在线）"))
+                        name = chatBoard.current_clicked.split("（")[0];
+                    else
+                        name = chatBoard.current_clicked;
+
+                    String path = "D:\\IDEA_code\\HeartBridge_ZhangPL\\src\\Client\\pers\\zpl\\HeartBridge\\history\\"+chatBoard.user+"\\"+name+".txt";
                     File file = new File(path);
                     BufferedReader bufferedReader = null;
                     try{
