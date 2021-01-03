@@ -87,9 +87,6 @@ public class Controller {
         arrList.toArray(strings);
 
         for(int i = 0;i<strings.length;i++){
-
-
-
             if(online[i].equals("0"))
                 strings[i] +="（未在线）";
         }
@@ -108,7 +105,7 @@ public class Controller {
 
     public static void main(String[] args) {
         //Controller controller = new Controller("zpl2");
-        Controller controller1 = new Controller("zpl2");
+        Controller controller1 = new Controller("zpl1");
 
     }
 }

@@ -11,6 +11,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -233,6 +235,49 @@ public class MainWindow extends JFrame {
 
         myPanel.add(inputBoard.textfield);
 
+        this.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try{
+                    controller.client.sc.write(controller.client.charset.encode("bye&"+user_name+"&null#null"));
+                }catch (IOException e3){
+                    e3.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            }
+        });
+
 
 
 
@@ -255,7 +300,7 @@ public class MainWindow extends JFrame {
                     }
                     n++;
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

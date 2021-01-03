@@ -210,6 +210,14 @@ public class server_ZhangPL {
                 System.out.println(sender+" has registered sucessfully");
 
             }
+            else if(type.toString().equals("bye")){
+                for (int i = 0; i < maps.size(); i++) {
+                    if (maps.get(i).containsKey(sender.toString())) {
+                        maps.remove(maps.get(i));
+                    }
+                }
+
+            }
             else if(type.toString().equals("get_friend"))
             {
                 friend_SQL f = new friend_SQL();
@@ -226,7 +234,8 @@ public class server_ZhangPL {
                         online+=" ";
                     int m = 0;
                     for (int j = 0; j < maps.size(); j++) {
-                        if (maps.get(j).get(list1[i]) != null) {
+                        System.out.println(maps.get(j).get(list1[i]));
+                        if (maps.get(j).get(list1[i]) != null&&maps.get(j).get(list1[i]).isConnected()) {
                             online +="1";
                             m = 1;
                             break;
