@@ -2,6 +2,7 @@ package Board.pers.zpl.HeartBridge;
 
 import Client.pers.zpl.HeartBridge.Controller;
 import Client.pers.zpl.HeartBridge.client_ZhangPL;
+import SQL.pers.zpl.HeartBridge.friend_SQL;
 import com.mysql.cj.xdevapi.Client;
 
 import javax.swing.*;
@@ -89,24 +90,69 @@ public class MainWindow extends JFrame {
 //        this.getLayeredPane().setLayout(null);
         myPanel.setLayout(null);
 
+        // define the object of textfield
+        JTextField userText = new JTextField();
+        userText.setBounds(30, 25, 135, 25);
+        // add to the panel
+        mypanel.add(userText);
+
+        JButton jButton3 = new JButton();
+        jButton3.setText("添加好友");
+        jButton3.setBorder(BorderFactory.createRaisedSoftBevelBorder());
+        jButton3.setBackground(Color.WHITE);
+        jButton3.setBounds(165,25,70,25);
+        jButton3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = userText.getText();
+                SQL.pers.zpl.HeartBridge.account_SQL a = new SQL.pers.zpl.HeartBridge.account_SQL();
+                int res = a.user_check(name);
+                if(res==1)
+                {
+                    SQL.pers.zpl.HeartBridge.friend_SQL f = new friend_SQL();
+                    f.insert_friend(user_name,name);
+                    JOptionPane.showMessageDialog(null,
+                            "add successfully","Tips",JOptionPane.WARNING_MESSAGE);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null,
+                            "user not exist","Tips",JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
+        myPanel.add(jButton3);
+
+        JButton jButton2 = new JButton();
+        jButton2.setText("删除好友");
+        jButton2.setBorder(BorderFactory.createRaisedSoftBevelBorder());
+        jButton2.setBackground(Color.WHITE);
+        jButton2.setBounds(40,500,70,20);
+        jButton2.setEnabled(false);
+        myPanel.add(jButton2);
+        jButton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = utils.pers.zpl.HeartBridge.delete_tail.delete_tail(chatBoard.current_clicked);
+                SQL.pers.zpl.HeartBridge.friend_SQL a = new SQL.pers.zpl.HeartBridge.friend_SQL();
+                a.delete_friend(user_name,name);
+            }
+        });
+
 
 
         JButton jButton1 = new JButton();
         jButton1.setText("删除聊天记录");
         jButton1.setBorder(BorderFactory.createRaisedSoftBevelBorder());
         jButton1.setBackground(Color.WHITE);
-        jButton1.setBounds(600,460,100,20);
+        jButton1.setBounds(120,500,90,20);
         jButton1.setEnabled(false);
         myPanel.add(jButton1);
         jButton1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 chatBoard.jTextPane.setText("");
-                String name;
-                if(chatBoard.current_clicked.contains("（未在线）"))
-                    name = chatBoard.current_clicked.split("（")[0];
-                else
-                    name = chatBoard.current_clicked;
+                String name = utils.pers.zpl.HeartBridge.delete_tail.delete_tail(chatBoard.current_clicked);
                 String fileName = "D:\\IDEA_code\\HeartBridge_ZhangPL\\src\\Client\\pers\\zpl\\HeartBridge\\history\\"+user_name+"\\"+name+".txt";
                 File file =new File(fileName);
                 try {
@@ -140,7 +186,7 @@ public class MainWindow extends JFrame {
         jButton.setEnabled(false);
         myPanel.add(jButton);
         this.inputBoard = new InputBoard(chatBoard,jButton);
-        friendList = new FriendList(controller,chatBoard,jButton,inputBoard,jButton1);
+        friendList = new FriendList(controller,chatBoard,jButton,inputBoard,jButton1,jButton2);
         friendList.update(controller,chatBoard);
 
 

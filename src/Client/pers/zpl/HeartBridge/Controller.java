@@ -8,6 +8,9 @@ import com.mysql.cj.xdevapi.Client;
 import javax.swing.*;
 import javax.swing.text.Caret;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Controller {
     public MainWindow mainWindow;
@@ -75,12 +78,23 @@ public class Controller {
 
         String list[] = friend_name.split(" ");
 
-        for(int i = 0;i<list.length;i++){
+        List<String> list1= Arrays.asList(list);
+        List<String> arrList = new ArrayList<String>(list1);
+        arrList.remove("");
+
+        String[] strings = new String[arrList.size()];
+
+        arrList.toArray(strings);
+
+        for(int i = 0;i<strings.length;i++){
+
+
+
             if(online[i].equals("0"))
-                list[i] +="（未在线）";
+                strings[i] +="（未在线）";
         }
 
-        return list;
+        return strings;
     }
 
     public String[] get_friend_online(String friend) {

@@ -22,8 +22,9 @@ public class FriendList {
     JButton jButton;
     InputBoard inputBoard;
     JButton jButton1;
+    JButton jButton2;
 
-    public FriendList(Controller controller,ChatBoard chatBoard,JButton jButton,InputBoard inputBoard,JButton jButton1){
+    public FriendList(Controller controller,ChatBoard chatBoard,JButton jButton,InputBoard inputBoard,JButton jButton1,JButton jButton2){
         // transparent the console
 //        this.setLayout(null);
 //        this.setOpaque(false);
@@ -33,6 +34,7 @@ public class FriendList {
         this.jButton = jButton;
         this.inputBoard = inputBoard;
         this.jButton1 = jButton1;
+        this.jButton2 = jButton2;
 
         //update(controller);
 
@@ -77,15 +79,16 @@ public class FriendList {
                 if(inputBoard.textfield.getText()!="")
                     jButton.setEnabled(true);
                 jButton1.setEnabled(true);
+                jButton2.setEnabled(true);
 
 
                 if(true){
                     chatBoard.jTextPane.setText("");
-                    String name;
-                    if(chatBoard.current_clicked.contains("（未在线）"))
-                        name = chatBoard.current_clicked.split("（")[0];
-                    else
-                        name = chatBoard.current_clicked;
+                    String name = utils.pers.zpl.HeartBridge.delete_tail.delete_tail(chatBoard.current_clicked);
+//                    if(chatBoard.current_clicked.contains("（未在线）"))
+//                        name = chatBoard.current_clicked.split("（")[0];
+//                    else
+//                        name = chatBoard.current_clicked;
 
                     String path = "D:\\IDEA_code\\HeartBridge_ZhangPL\\src\\Client\\pers\\zpl\\HeartBridge\\history\\"+chatBoard.user+"\\"+name+".txt";
                     File file = new File(path);
@@ -123,7 +126,7 @@ public class FriendList {
 
         jScrollPane = new JScrollPane(list1);
 
-        jScrollPane.setBounds(30,50,200,450);
+        jScrollPane.setBounds(30,50,200,440);
 
         //transparent the console
         jScrollPane.setOpaque(false);

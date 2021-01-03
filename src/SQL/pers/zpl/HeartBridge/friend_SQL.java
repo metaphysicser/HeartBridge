@@ -1,10 +1,7 @@
 package SQL.pers.zpl.HeartBridge;
 
 import javax.swing.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 public class friend_SQL {
     /**
@@ -64,9 +61,79 @@ public class friend_SQL {
         return null;
     }
 
+    public boolean delete_friend(String user_name,String friend_delete) {
+        /**
+         * get the friend list
+         * @param user_name the user input
+         */
+        Connection connection = null;
+        Statement statement = null;
+
+        try {
+            Class.forName(JDBC_DRIVER);
+
+            System.out.println("connect the database...");
+            connection = DriverManager.getConnection(DB_URL,USER,PASSWORD);
+
+            String delete_sql = "delete from "+user_name+" where user_friend="+"'"+friend_delete+"'";
+            PreparedStatement preparedStatement = connection.prepareStatement(delete_sql);
+            preparedStatement.executeUpdate();
+
+//            statement = connection.createStatement();
+//
+//            ResultSet resultSet = statement.executeQuery(delete_sql);
+            System.out.println(delete_sql);
+            System.out.println(friend_delete+" is deleted sucessfully");
+
+            preparedStatement.close();
+            connection.close();
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("the database maybe shut down");
+        return false;
+    }
+
+    public boolean insert_friend(String user_name,String friend_delete) {
+        /**
+         * get the friend list
+         * @param user_name the user input
+         */
+        Connection connection = null;
+        Statement statement = null;
+
+        try {
+            Class.forName(JDBC_DRIVER);
+
+            System.out.println("connect the database...");
+            connection = DriverManager.getConnection(DB_URL,USER,PASSWORD);
+
+            String delete_sql = "insert into "+user_name+" (user_friend) value "+"('"+friend_delete+"')";
+            PreparedStatement preparedStatement = connection.prepareStatement(delete_sql);
+            preparedStatement.executeUpdate();
+
+//            statement = connection.createStatement();
+//
+//            ResultSet resultSet = statement.executeQuery(delete_sql);
+            System.out.println(delete_sql);
+            System.out.println(friend_delete+" is deleted sucessfully");
+
+            preparedStatement.close();
+            connection.close();
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("the database maybe shut down");
+        return false;
+    }
+
     public static void main(String[] args) {
         friend_SQL f = new friend_SQL();
-        System.out.println(f.list_friend("zpl1"));
+        System.out.println(f.insert_friend("zpl1","zpl3"));
     }
 
 }
