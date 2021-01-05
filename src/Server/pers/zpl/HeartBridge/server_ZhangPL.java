@@ -2,6 +2,8 @@ package Server.pers.zpl.HeartBridge;
 
 import SQL.pers.zpl.HeartBridge.account_SQL;
 import SQL.pers.zpl.HeartBridge.friend_SQL;
+import SQL.pers.zpl.HeartBridge.group_SQL;
+import com.mysql.cj.jdbc.exceptions.SQLError;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -135,7 +137,7 @@ public class server_ZhangPL {
                 intBuff.flip();
 
                 String str = charset.decode(intBuff).toString();
-                System.out.println("str: "+str);
+                //System.out.println("str: "+str);
 
 //
                 if(str.length()>0)
@@ -177,28 +179,43 @@ public class server_ZhangPL {
             {
                 System.out.println("the type is people_send");
 
-                if(cheackOut(receiver.toString())){
-                    if(sender.toString().equals(receiver.toString()))//send self
-                        SendToSpecificClient(selector,sender.toString(),sender.toString(),
-                                "你不能向自己发消息",type.toString());
-                    else{
-                        SendToSpecificClient(selector,receiver.toString(),sender.toString(),content_.toString(),type.toString());
+                if(utils.pers.zpl.HeartBridge.judge_group.judge_group(receiver.toString())==0)
+                {
+                    if(cheackOut(receiver.toString())){
+                        if(sender.toString().equals(receiver.toString()))//send self
+                            SendToSpecificClient(selector,sender.toString(),sender.toString(),
+                                    "你不能向自己发消息",type.toString());
+                        else{
+                            SendToSpecificClient(selector,receiver.toString(),sender.toString(),content_.toString(),type.toString());
+                        }
+
+                    }
+                    else//not oneline or don't exist
+                    {
+                        account_SQL a = new account_SQL();
+                        if(a.user_check(receiver.toString())==1)
+                        {
+                            SendToSpecificClient(selector,sender.toString(),sender.toString(),
+                                    "对方没有上线",type.toString());
+                        }
+                        else{
+                            SendToSpecificClient(selector,sender.toString(),sender.toString(),
+                                    "对方没有上线",type.toString());
+                        }
                     }
 
                 }
-                else//not oneline or don't exist
-                {
-                    account_SQL a = new account_SQL();
-                    if(a.user_check(receiver.toString())==1)
-                    {
-                        SendToSpecificClient(selector,sender.toString(),sender.toString(),
-                                "对方没有上线或不存在",type.toString());
+                else {
+                    SQL.pers.zpl.HeartBridge.group_SQL g = new group_SQL();
+                    String member = g.list_member(sender.toString());
+                    String list[] = member.split(" ");
+                    for(int i = 0;i<list.length;i++){
+                        SendToSpecificClient(selector,list[i],sender.toString(),
+                                content_.toString(),type.toString());
                     }
-                    else{
-                        SendToSpecificClient(selector,sender.toString(),sender.toString(),
-                                "对方没有上线或不存在",type.toString());
-                    }
+
                 }
+
 
 
 

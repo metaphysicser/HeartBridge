@@ -67,8 +67,11 @@ public class MainWindow extends JFrame {
 //        this.add(left);
 
         this.setSize(900,600);//set seze
+
         try{
-            this.setVisible(true);//make visible
+
+
+            this.setVisible(true);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -129,7 +132,7 @@ public class MainWindow extends JFrame {
         jButton2.setText("删除好友");
         jButton2.setBorder(BorderFactory.createRaisedSoftBevelBorder());
         jButton2.setBackground(Color.WHITE);
-        jButton2.setBounds(40,500,70,20);
+        jButton2.setBounds(40,480,70,20);
         jButton2.setEnabled(false);
         myPanel.add(jButton2);
         jButton2.addActionListener(new ActionListener() {
@@ -147,7 +150,7 @@ public class MainWindow extends JFrame {
         jButton1.setText("删除聊天记录");
         jButton1.setBorder(BorderFactory.createRaisedSoftBevelBorder());
         jButton1.setBackground(Color.WHITE);
-        jButton1.setBounds(120,500,90,20);
+        jButton1.setBounds(120,480,90,20);
         jButton1.setEnabled(false);
         myPanel.add(jButton1);
         jButton1.addActionListener(new ActionListener() {
@@ -291,7 +294,7 @@ public class MainWindow extends JFrame {
                         System.out.println("username"+user_name);
                         controller.send_user_friend(user_name);
                         //friendList.update(controller, chatBoard);
-                        friendList.real_update(controller);
+                        friendList.real_update(controller,chatBoard);
 //                        mypanel.validate();
 //                        mypanel.repaint();
 //                        mypanel.updateUI();

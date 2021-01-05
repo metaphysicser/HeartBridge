@@ -1,6 +1,7 @@
 package Board.pers.zpl.HeartBridge;
 
 import Client.pers.zpl.HeartBridge.Controller;
+import SQL.pers.zpl.HeartBridge.group_SQL;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -9,6 +10,8 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @Description: design the FriendList
@@ -16,7 +19,7 @@ import java.io.FileReader;
  * @Date: 2020.12.27 19:53
  * */
 public class FriendList {
-    public String friend[]={"小明","小红","幸福一家人","乐乐","项目开发组","考研1群","小杰","辅导员","测试人员1","美工人员","编程人员","甲方"};
+    public String friend[]={};
     public JList<String> list1; //= new JList<String>(friend);
     JScrollPane jScrollPane;
     JButton jButton;
@@ -44,9 +47,25 @@ public class FriendList {
 
     }
     public void update(Controller controller,ChatBoard chatBoard){
-        System.out.println(friend[0]);
+
+
+        SQL.pers.zpl.HeartBridge.group_SQL g = new group_SQL();
+        String member = g.list_member(chatBoard.user);
+        String[] list = member.split(" ");
+
+
 
         this.friend = controller.client.friend_list;
+        int l2 = list.length;
+        int l1 = friend.length;
+
+        friend = Arrays.copyOf(friend,l1+l2);
+        System.arraycopy(list,0,friend,l1,l2);
+
+
+//        for(int i = 0;i<list.length;i++){
+//            friend.
+//        }
 
         list1 = new JList<String>(friend);
 //        list1.removeAll();
@@ -126,7 +145,7 @@ public class FriendList {
 
         jScrollPane = new JScrollPane(list1);
 
-        jScrollPane.setBounds(30,50,200,440);
+        jScrollPane.setBounds(30,50,200,420);
 
         //transparent the console
         jScrollPane.setOpaque(false);
@@ -136,12 +155,30 @@ public class FriendList {
 
     }
 
-    public void real_update(Controller controller){
+    public void real_update(Controller controller,ChatBoard chatBoard){
+        SQL.pers.zpl.HeartBridge.group_SQL g = new group_SQL();
+        String member = g.list_member(chatBoard.user);
+        String[] list = member.split(" ");
+
+
+
         this.friend = controller.client.friend_list;
+        int l2 = list.length;
+        int l1 = friend.length;
+
+        friend = Arrays.copyOf(friend,l1+l2);
+        System.arraycopy(list,0,friend,l1,l2);
+
 
         list1.setListData(friend);
+        try{
+            jScrollPane.setViewportView(list1);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
-        jScrollPane.setViewportView(list1);
+
 
     }
 }

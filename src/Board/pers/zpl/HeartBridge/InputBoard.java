@@ -5,6 +5,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import java.awt.*;
 
 public class InputBoard{
     public JTextPane textfield;
@@ -16,6 +17,10 @@ public class InputBoard{
         textfield = new JTextPane();
         textfield.setBorder(BorderFactory.createLoweredBevelBorder());
         textfield.setOpaque(false);
+
+        Font font = new Font("宋体",Font.BOLD,15);//set the txt
+
+        textfield.setFont(font);
 
 
         this.textfield.setBounds(270,360,550,140);
