@@ -48,22 +48,34 @@ public class Controller {
 
     }
 
-    public void receive_person_message(StringBuilder content,String receiver)
+    public void receive_person_message(StringBuilder content,String receiver,String sender)
     {
 
-
+        if(utils.pers.zpl.HeartBridge.judge_group.judge_group(sender)==0){
             this.mainWindow.chatBoard.jTextPane.setDocument(this.mainWindow.chatBoard.jTextPane.getStyledDocument());
-            this.mainWindow.chatBoard.addTextMessage(content.toString(),1,receiver);
-            this.mainWindow.chatBoard.write_history(content.toString(),1,receiver);
+            if(chatBoard.current_clicked.equals(sender))
+                this.mainWindow.chatBoard.addTextMessage(content.toString(),1,sender);
+            this.mainWindow.chatBoard.write_history(content.toString(),1,sender);
             this.mainWindow.chatBoard.jTextPane.setDocument(this.mainWindow.chatBoard.jTextPane.getStyledDocument());
             System.out.println("the chatboard has received the message sucessfully");
+
+        }else{
+            this.mainWindow.chatBoard.jTextPane.setDocument(this.mainWindow.chatBoard.jTextPane.getStyledDocument());
+            if(chatBoard.current_clicked.equals(sender))
+                this.mainWindow.chatBoard.addTextMessage(content.toString(),1,sender);
+            this.mainWindow.chatBoard.write_history(content.toString(),1,sender);
+            this.mainWindow.chatBoard.jTextPane.setDocument(this.mainWindow.chatBoard.jTextPane.getStyledDocument());
+            System.out.println("the chatboard has received the message sucessfully");
+
+        }
+
 
 
 
     }
     public void send_user_friend(String user) {
         try {
-            client.sc.write(client.charset.encode("get_friend&" + user + "&null#null"));
+            client.sc.write(client.charset.encode("get_friend&" + user + "&"+user+"#null"));
 
         } catch (IOException e) {
             e.printStackTrace();

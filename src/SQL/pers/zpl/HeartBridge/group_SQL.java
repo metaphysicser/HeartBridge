@@ -1,9 +1,6 @@
 package SQL.pers.zpl.HeartBridge;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 public class group_SQL {
     /**
@@ -64,8 +61,71 @@ public class group_SQL {
         System.out.println("the database maybe shut down");
         return null;
     }
+
+    public void create_table(String name){
+        Connection connection = null;
+        Statement statement = null;
+
+        try {
+            Class.forName(JDBC_DRIVER);
+
+            System.out.println("connect the database...");
+            connection = DriverManager.getConnection(DB_URL,USER,PASSWORD);
+
+            statement = connection.createStatement();
+            String sql;
+            sql = "create table " + name+" (member varchar(256) not null)charset=utf8;";
+            System.out.println(statement.executeLargeUpdate(sql));
+
+
+
+            statement.close();
+            connection.close();
+
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("the database maybe shut down");
+        return;
+    }
+
+    public boolean insert_friend(String table,String name) {
+        /**
+         * get the friend list
+         * @param user_name the user input
+         */
+        Connection connection = null;
+        Statement statement = null;
+
+        try {
+            Class.forName(JDBC_DRIVER);
+
+            System.out.println("connect the database...");
+            connection = DriverManager.getConnection(DB_URL,USER,PASSWORD);
+
+            String delete_sql = "insert into "+table+" (member) value "+"('"+name+"')";
+            PreparedStatement preparedStatement = connection.prepareStatement(delete_sql);
+            preparedStatement.executeUpdate();
+
+//            statement = connection.createStatement();
+//
+//            ResultSet resultSet = statement.executeQuery(delete_sql);
+            System.out.println(delete_sql);
+
+
+            preparedStatement.close();
+            connection.close();
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("the database maybe shut down");
+        return false;
+    }
     public static void main(String[] args) {
         group_SQL f = new group_SQL();
-        System.out.println(f.list_member("zpl1"));
+        f.create_table("test..");
     }
 }

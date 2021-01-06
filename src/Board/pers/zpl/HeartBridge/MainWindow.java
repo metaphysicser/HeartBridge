@@ -132,7 +132,7 @@ public class MainWindow extends JFrame {
         jButton2.setText("删除好友");
         jButton2.setBorder(BorderFactory.createRaisedSoftBevelBorder());
         jButton2.setBackground(Color.WHITE);
-        jButton2.setBounds(40,480,70,20);
+        jButton2.setBounds(20,480,60,20);
         jButton2.setEnabled(false);
         myPanel.add(jButton2);
         jButton2.addActionListener(new ActionListener() {
@@ -144,13 +144,29 @@ public class MainWindow extends JFrame {
             }
         });
 
+        JButton jButton4 = new JButton();
+        jButton4.setText("建群");
+        jButton4.setBorder(BorderFactory.createRaisedSoftBevelBorder());
+        jButton4.setBackground(Color.WHITE);
+        jButton4.setBounds(190,480,50,20);
+        jButton4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Group g = new Group();
+
+
+            }
+        });
+
+        myPanel.add(jButton4);
+
 
 
         JButton jButton1 = new JButton();
         jButton1.setText("删除聊天记录");
         jButton1.setBorder(BorderFactory.createRaisedSoftBevelBorder());
         jButton1.setBackground(Color.WHITE);
-        jButton1.setBounds(120,480,90,20);
+        jButton1.setBounds(90,480,90,20);
         jButton1.setEnabled(false);
         myPanel.add(jButton1);
         jButton1.addActionListener(new ActionListener() {
@@ -181,6 +197,13 @@ public class MainWindow extends JFrame {
 
         myPanel.add(chatBoard.jScrollPane);
 
+        JLabel passwordLabel = new JLabel(chatBoard.current_clicked);
+
+        // set the location and size
+        passwordLabel.setBounds(280, 20, 80, 25);
+
+        mypanel.add(passwordLabel);
+
 
 
         JButton jButton = new JButton();
@@ -191,7 +214,7 @@ public class MainWindow extends JFrame {
         jButton.setEnabled(false);
         myPanel.add(jButton);
         this.inputBoard = new InputBoard(chatBoard,jButton);
-        friendList = new FriendList(controller,chatBoard,jButton,inputBoard,jButton1,jButton2);
+        friendList = new FriendList(controller,chatBoard,jButton,inputBoard,jButton1,jButton2,passwordLabel);
         friendList.update(controller,chatBoard);
 
 
@@ -303,7 +326,7 @@ public class MainWindow extends JFrame {
                     }
                     n++;
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(1500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

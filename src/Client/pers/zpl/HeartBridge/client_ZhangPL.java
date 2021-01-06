@@ -190,7 +190,7 @@ public class client_ZhangPL {
         if(type.toString().equals("people_send")&&content_.length()>0)
 
         {
-            this.controller.receive_person_message(content_,sender.toString());
+            this.controller.receive_person_message(content_,receiver.toString(),sender.toString());
         }
         else if(type.toString().equals("get_friend")&&content_.length()>0)
         {

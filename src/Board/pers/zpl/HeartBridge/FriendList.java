@@ -26,8 +26,9 @@ public class FriendList {
     InputBoard inputBoard;
     JButton jButton1;
     JButton jButton2;
+    JLabel jLabel;
 
-    public FriendList(Controller controller,ChatBoard chatBoard,JButton jButton,InputBoard inputBoard,JButton jButton1,JButton jButton2){
+    public FriendList(Controller controller,ChatBoard chatBoard,JButton jButton,InputBoard inputBoard,JButton jButton1,JButton jButton2,JLabel jLabel){
         // transparent the console
 //        this.setLayout(null);
 //        this.setOpaque(false);
@@ -38,6 +39,7 @@ public class FriendList {
         this.inputBoard = inputBoard;
         this.jButton1 = jButton1;
         this.jButton2 = jButton2;
+        this.jLabel = jLabel;
 
         //update(controller);
 
@@ -70,7 +72,7 @@ public class FriendList {
         list1 = new JList<String>(friend);
 //        list1.removeAll();
 //        list1.updateUI();
-        Font font = new Font("微软雅黑",Font.PLAIN,30);//set the txt
+        Font font = new Font("微软雅黑",Font.PLAIN,20);//set the txt
         list1.setFont(font);
 
         // transparent the console
@@ -99,6 +101,8 @@ public class FriendList {
                     jButton.setEnabled(true);
                 jButton1.setEnabled(true);
                 jButton2.setEnabled(true);
+                jLabel.setText(chatBoard.current_clicked);
+
 
 
                 if(true){

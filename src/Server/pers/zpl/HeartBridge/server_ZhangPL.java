@@ -207,11 +207,37 @@ public class server_ZhangPL {
                 }
                 else {
                     SQL.pers.zpl.HeartBridge.group_SQL g = new group_SQL();
-                    String member = g.list_member(sender.toString());
+                    String member = g.list_member(receiver.toString());
                     String list[] = member.split(" ");
                     for(int i = 0;i<list.length;i++){
-                        SendToSpecificClient(selector,list[i],sender.toString(),
-                                content_.toString(),type.toString());
+                        System.out.println(list[i]);
+                        if(!list[i].equals(sender.toString())) {
+                            SocketChannel desChannel = null;
+                            for (int j = 0; j < maps.size(); j++) {
+                                if (maps.get(j).get(list[i]) != null) {
+                                    desChannel = maps.get(j).get(list[i]);
+                                    break;
+                                }
+
+                            }
+                            for (SelectionKey key : selector.keys()) {
+                                Channel targetchannel = key.channel();
+                                if (targetchannel instanceof SocketChannel) {
+                                    if (desChannel == null || desChannel.equals(targetchannel)) {
+                                        SocketChannel dest = (SocketChannel) targetchannel;
+                                        try{
+                                            dest.write(charset.encode(type+"&"+receiver.toString()+"&"+list[i]+"#"+content_));
+                                        }catch (IOException e){
+                                            e.printStackTrace();
+                                        }
+
+                                        System.out.println("the message has sended successfully");
+                                    }
+                                }
+
+                            }
+
+                        }
                     }
 
                 }
@@ -271,54 +297,6 @@ public class server_ZhangPL {
 
 
 
-//
-//            if (content.length() > 0) {
-//
-//                if (content.indexOf(":") == -1) {// the content is not message
-//
-//                    String name = content.toString();
-//
-//                    if (cheackOut(name)) {// the user has existed
-//                        sc.write(charset.encode(USER_EXIST));
-//                        sc.write(charset.encode("\nPlease input your name："));
-//                    } else {
-//                        map.put(name, sc);// put in the Hashmap
-//                        maps.add(map);
-//
-//                        int num = OnlineNum(selector);// get the online num
-//
-//                        socketChannelOnline.add(sc);
-//
-//                        String message = "welcome " + name
-//                                + " to chat room! Online numbers:" + num;
-//                        BroadcastToAllClient(selector, message);
-//                    }
-//
-//                } else if (content.indexOf(":") == 0) {// the group message
-//                    // send message to others
-//                    sendToOthersClient(selector, sc, content.substring(1));
-//
-//                } else {// the message to someone
-//                    String[] arrayContent = content.toString().split(":");
-//                    String[] arrayName = arrayContent[0].toString().split("to");
-//                    String oneself = arrayName[0];
-//                    String target = arrayName[1];
-//                    // 发送消息给特定用户
-//                    if (arrayContent != null && arrayContent[0] != null) {
-//                        String message = arrayContent[1];
-//                        message = oneself + " say: " + message;
-//                        if (cheackOut(target)) {// whether the user exists
-//                            if (!oneself.equals(target)) {
-//                                SendToSpecificClient(selector, target,target, message);
-//                            } else {// send message to your self
-//                                sc.write(charset.encode(MESSAGE_FORMAT_ERROR));
-//                            }
-//                        } else {
-//                            sc.write(charset.encode(USER_NOTEXIST));
-//                        }
-//                    }
-//                }
-//            }
         }
     }
 
@@ -375,7 +353,12 @@ public class server_ZhangPL {
             if (targetchannel instanceof SocketChannel) {
                 if (desChannel == null || desChannel.equals(targetchannel)) {
                     SocketChannel dest = (SocketChannel) targetchannel;
-                    dest.write(charset.encode(type+"&"+sender+"&"+name+"#"+content));
+                    try{
+                        dest.write(charset.encode(type+"&"+sender+"&"+name+"#"+content));
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+
                     System.out.println("the message has sended successfully");
                 }
             }
