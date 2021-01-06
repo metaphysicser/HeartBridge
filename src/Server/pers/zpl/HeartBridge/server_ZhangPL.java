@@ -181,6 +181,7 @@ public class server_ZhangPL {
 
                 if(utils.pers.zpl.HeartBridge.judge_group.judge_group(receiver.toString())==0)
                 {
+                    System.out.println(cheackOut(receiver.toString()));
                     if(cheackOut(receiver.toString())){
                         if(sender.toString().equals(receiver.toString()))//send self
                             SendToSpecificClient(selector,sender.toString(),sender.toString(),
@@ -193,15 +194,11 @@ public class server_ZhangPL {
                     else//not oneline or don't exist
                     {
                         account_SQL a = new account_SQL();
-                        if(a.user_check(receiver.toString())==1)
-                        {
-                            SendToSpecificClient(selector,sender.toString(),sender.toString(),
+
+
+                        SendToSpecificClient(selector,sender.toString(),receiver.toString(),
                                     "对方没有上线",type.toString());
-                        }
-                        else{
-                            SendToSpecificClient(selector,sender.toString(),sender.toString(),
-                                    "对方没有上线",type.toString());
-                        }
+
                     }
 
                 }
@@ -220,22 +217,31 @@ public class server_ZhangPL {
                                 }
 
                             }
-                            for (SelectionKey key : selector.keys()) {
-                                Channel targetchannel = key.channel();
-                                if (targetchannel instanceof SocketChannel) {
-                                    if (desChannel == null || desChannel.equals(targetchannel)) {
-                                        SocketChannel dest = (SocketChannel) targetchannel;
-                                        try{
-                                            dest.write(charset.encode(type+"&"+receiver.toString()+"&"+list[i]+"#"+content_));
-                                        }catch (IOException e){
-                                            e.printStackTrace();
-                                        }
-
-                                        System.out.println("the message has sended successfully");
-                                    }
+                            if(desChannel!=null)
+                            {
+                                try{
+                                    desChannel.write(charset.encode(type+"&"+receiver.toString()+"&"+list[i]+"#"+content_));
+                                }catch (IOException e){
+                                    e.printStackTrace();
                                 }
-
                             }
+
+//                            for (SelectionKey key : selector.keys()) {
+//                                Channel targetchannel = key.channel();
+//                                if (targetchannel instanceof SocketChannel) {
+//                                    if (desChannel==null||desChannel.equals(targetchannel)) {
+//                                        SocketChannel dest = (SocketChannel) targetchannel;
+//                                        try{
+//                                            dest.write(charset.encode(type+"&"+receiver.toString()+"&"+list[i]+"#"+content_));
+//                                        }catch (IOException e){
+//                                            e.printStackTrace();
+//                                        }
+//
+//                                        System.out.println("the message has sended successfully");
+//                                    }
+//                                }
+//
+//                            }
 
                         }
                     }
@@ -310,6 +316,7 @@ public class server_ZhangPL {
         boolean isExit = false;
         for (int i = 0; i < maps.size(); i++) {
             if (maps.get(i).containsKey(name)) {
+                System.out.println("check: "+name);
                 isExit = true;
                 break;
             }

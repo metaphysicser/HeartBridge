@@ -38,7 +38,8 @@ public class Controller {
     public void send_person_message(String content)
     {
         try {
-            client.write_person_message(content,mainWindow.chatBoard.current_clicked);
+            String name = utils.pers.zpl.HeartBridge.delete_tail.delete_tail(chatBoard.current_clicked);
+            client.write_person_message(content,name);
 
         }catch (IOException e)
         {
@@ -50,10 +51,11 @@ public class Controller {
 
     public void receive_person_message(StringBuilder content,String receiver,String sender)
     {
+        String name = utils.pers.zpl.HeartBridge.delete_tail.delete_tail(chatBoard.current_clicked);
 
         if(utils.pers.zpl.HeartBridge.judge_group.judge_group(sender)==0){
             this.mainWindow.chatBoard.jTextPane.setDocument(this.mainWindow.chatBoard.jTextPane.getStyledDocument());
-            if(chatBoard.current_clicked.equals(sender))
+            if(name.equals(sender))
                 this.mainWindow.chatBoard.addTextMessage(content.toString(),1,sender);
             this.mainWindow.chatBoard.write_history(content.toString(),1,sender);
             this.mainWindow.chatBoard.jTextPane.setDocument(this.mainWindow.chatBoard.jTextPane.getStyledDocument());
@@ -61,7 +63,7 @@ public class Controller {
 
         }else{
             this.mainWindow.chatBoard.jTextPane.setDocument(this.mainWindow.chatBoard.jTextPane.getStyledDocument());
-            if(chatBoard.current_clicked.equals(sender))
+            if(name.equals(sender))
                 this.mainWindow.chatBoard.addTextMessage(content.toString(),1,sender);
             this.mainWindow.chatBoard.write_history(content.toString(),1,sender);
             this.mainWindow.chatBoard.jTextPane.setDocument(this.mainWindow.chatBoard.jTextPane.getStyledDocument());

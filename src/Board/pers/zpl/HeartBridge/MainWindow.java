@@ -225,6 +225,7 @@ public class MainWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String content = inputBoard.textfield.getText();
+                String name = utils.pers.zpl.HeartBridge.delete_tail.delete_tail(chatBoard.current_clicked);
                 chatBoard.jTextPane.setDocument(chatBoard.jTextPane.getStyledDocument());
 //                int[] indices = friendList.list1.getSelectedIndices();
 //                // 获取选项数据的 ListModel
@@ -232,11 +233,11 @@ public class MainWindow extends JFrame {
 
 
 
-                System.out.println("current click: "+chatBoard.current_clicked);
+                System.out.println("current click: "+name);
                 if(chatBoard.current_clicked != null)
                 {
-                    chatBoard.addTextMessage(content,0, chatBoard.current_clicked);
-                    chatBoard.write_history(content,0, chatBoard.current_clicked);
+                    chatBoard.addTextMessage(content,0, name);
+                    chatBoard.write_history(content,0, name);
                 }
 
                 inputBoard.textfield.setText("");

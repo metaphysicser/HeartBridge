@@ -9,4 +9,8 @@ public class delete_tail {
             name = current_clicked;
         return name;
     }
+
+    public static void main(String[] args) {
+        System.out.println(delete_tail("zpl1（未在线）"));
+    }
 }

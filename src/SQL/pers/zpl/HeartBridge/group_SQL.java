@@ -126,6 +126,6 @@ public class group_SQL {
     }
     public static void main(String[] args) {
         group_SQL f = new group_SQL();
-        f.create_table("test..");
+        f.create_table("test");
     }
 }
